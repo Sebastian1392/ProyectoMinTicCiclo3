@@ -6,4 +6,4 @@ Roles de metodología Scrum.
 - Product Owner: Manuel.
 - Team: Amir.
         Christian.
-        Daniel.
+        Daniel herrera.
