@@ -5,5 +5,5 @@ Roles de metodología Scrum.
 - Scrum Master: Sebastian.
 - Product Owner: Manuel.
 - Team: Antony Arango Cardona.
-        Christian Felipe Fernandez Enriquez.
+        Christian Fernandez Enriquez.
         Daniel herrera.
