@@ -52,4 +52,12 @@ public class Enterprise {
         employees = new ArrayList<>();
         transactionsEnterprise = new ArrayList<>();
     }
+
+    public void addEmployee(Employee e){
+        employees.add(e);
+    }
+
+    public void removeEmployee(long id){
+        employees.removeIf(e -> e.getIdEmployee() == id);
+    }
 }
