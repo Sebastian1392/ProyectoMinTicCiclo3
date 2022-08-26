@@ -12,9 +12,11 @@ public class DemoApplication {
 
 	public static void main(String[] args) {
 //		SpringApplication.run(DemoApplication.class, args);
-		Enterprise enterprise1 = new Enterprise((long)1,"Colombina","4030434","31123434343","Calle 35",null,null);
+		Enterprise enterprise1 = new Enterprise((long)1,"IPhone","1826181","3223791256","Calle 16 Bis # 50-12",null,null);
+		Enterprise enterprise2 = new Enterprise((long)2,"Samsung","1596328","3115006697","Calle 14 # 12-50",null,null);
 		System.out.println(enterprise1.getNameEnterprise());
-		enterprise1.setNameEnterprise("Postobon");
+		System.out.println(enterprise2.getNameEnterprise());
+		enterprise1.setNameEnterprise("Xiaomi");
 		System.out.println(enterprise1.getNameEnterprise());
 	}
 
