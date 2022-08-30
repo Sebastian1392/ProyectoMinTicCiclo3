@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 
-//@Entity
+@Entity
 @Data
 @Table(name = "Enterprise")
 public class Enterprise {
@@ -40,7 +40,7 @@ public class Enterprise {
     private Date updatedAtEnterprise;
 
     private ArrayList<Employee> employees;
-    private ArrayList<Transaction> transactionsEnterprise;
+
     public Enterprise(Long idEnterprise, String nameEnterprise, String documentEnterprise, String phoneEnterprise, String addressEnterprise, Date createdAtEnterprise, Date updatedAtEnterprise) {
         this.idEnterprise = idEnterprise;
         this.nameEnterprise = nameEnterprise;
@@ -50,7 +50,6 @@ public class Enterprise {
         this.createdAtEnterprise = createdAtEnterprise;
         this.updatedAtEnterprise = updatedAtEnterprise;
         employees = new ArrayList<>();
-        transactionsEnterprise = new ArrayList<>();
     }
 
     public void addEmployee(Employee e){
@@ -59,5 +58,18 @@ public class Enterprise {
 
     public void removeEmployee(long id){
         employees.removeIf(e -> e.getIdEmployee() == id);
+    }
+
+    @Override
+    public String toString() {
+        return "Enterprise{" +
+                "idEnterprise=" + idEnterprise +
+                ", nameEnterprise='" + nameEnterprise + '\'' +
+                ", documentEnterprise='" + documentEnterprise + '\'' +
+                ", phoneEnterprise='" + phoneEnterprise + '\'' +
+                ", addressEnterprise='" + addressEnterprise + '\'' +
+                ", createdAtEnterprise=" + createdAtEnterprise +
+                ", updatedAtEnterprise=" + updatedAtEnterprise +
+                '}';
     }
 }

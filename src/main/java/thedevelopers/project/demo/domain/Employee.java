@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 
-//@Entity
+@Entity
 @Data
 @Table(name = "Employee")
 public class Employee {
@@ -16,6 +16,9 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long idEmployee;
+
+    @Column(name = "name", nullable = false)
+    private String nameEmployee;
 
     @Column(name = "email", unique = true)
     private String emailEmployee;
@@ -37,15 +40,27 @@ public class Employee {
     @Column(name = "updatedAt")
     private Date updatedAtEmployee;
 
-    private ArrayList<Transaction> transactionsEmployee;
 
-    public Employee(Long idEmployee, String emailEmployee, Enterprise enterpriseEmployee, RoleName roleName, Date createdAtEmployee, Date updatedAtEmployee) {
+    public Employee(Long idEmployee,String nameEmployee ,String emailEmployee, Enterprise enterpriseEmployee, RoleName roleName, Date createdAtEmployee, Date updatedAtEmployee) {
         this.idEmployee = idEmployee;
+        this.nameEmployee = nameEmployee;
         this.emailEmployee = emailEmployee;
         this.enterpriseEmployee = enterpriseEmployee;
         this.roleName = roleName;
         this.createdAtEmployee = createdAtEmployee;
         this.updatedAtEmployee = updatedAtEmployee;
-        transactionsEmployee = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "idEmployee=" + idEmployee +
+                ", nameEmployee='" + nameEmployee + '\'' +
+                ", emailEmployee='" + emailEmployee + '\'' +
+                ", enterpriseEmployee=" + enterpriseEmployee +
+                ", roleName=" + roleName +
+                ", createdAtEmployee=" + createdAtEmployee +
+                ", updatedAtEmployee=" + updatedAtEmployee +
+                '}';
     }
 }

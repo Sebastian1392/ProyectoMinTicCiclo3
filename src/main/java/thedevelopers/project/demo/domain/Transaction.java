@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Date;
 
-//@Entity
+@Entity
 @Data
 @Table(name = "Transaction")
 public class Transaction {
