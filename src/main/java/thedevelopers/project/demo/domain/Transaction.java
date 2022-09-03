@@ -1,15 +1,17 @@
 package thedevelopers.project.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Data
 @Table(name = "Transaction")
-public class Transaction {
+public class Transaction implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +26,12 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "id_employee", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private Employee employeeTransaction;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "id_enterprise", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private Enterprise enterpriseTransaction;
 
     @Temporal(TemporalType.DATE)
@@ -39,14 +43,4 @@ public class Transaction {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "updatedAt")
     private Date updatedAtTransaction;
-
-    public Transaction(Long idTransaction, String conceptTransaction, Float amountTransaction, Employee employeeTransaction, Enterprise enterpriseTransaction, Date createdAtTransaction, Date updatedAtTransaction) {
-        this.idTransaction = idTransaction;
-        this.conceptTransaction = conceptTransaction;
-        this.amountTransaction = amountTransaction;
-        this.employeeTransaction = employeeTransaction;
-        this.enterpriseTransaction = enterpriseTransaction;
-        this.createdAtTransaction = createdAtTransaction;
-        this.updatedAtTransaction = updatedAtTransaction;
-    }
 }

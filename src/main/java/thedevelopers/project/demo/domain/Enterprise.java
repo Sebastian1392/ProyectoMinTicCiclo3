@@ -4,13 +4,13 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Data
 @Table(name = "Enterprise")
-public class Enterprise {
+public class Enterprise implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,38 +38,4 @@ public class Enterprise {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "updatedAt")
     private Date updatedAtEnterprise;
-
-    private ArrayList<Employee> employees;
-
-    public Enterprise(Long idEnterprise, String nameEnterprise, String documentEnterprise, String phoneEnterprise, String addressEnterprise, Date createdAtEnterprise, Date updatedAtEnterprise) {
-        this.idEnterprise = idEnterprise;
-        this.nameEnterprise = nameEnterprise;
-        this.documentEnterprise = documentEnterprise;
-        this.phoneEnterprise = phoneEnterprise;
-        this.addressEnterprise = addressEnterprise;
-        this.createdAtEnterprise = createdAtEnterprise;
-        this.updatedAtEnterprise = updatedAtEnterprise;
-        employees = new ArrayList<>();
-    }
-
-    public void addEmployee(Employee e){
-        employees.add(e);
-    }
-
-    public void removeEmployee(long id){
-        employees.removeIf(e -> e.getIdEmployee() == id);
-    }
-
-    @Override
-    public String toString() {
-        return "Enterprise{" +
-                "idEnterprise=" + idEnterprise +
-                ", nameEnterprise='" + nameEnterprise + '\'' +
-                ", documentEnterprise='" + documentEnterprise + '\'' +
-                ", phoneEnterprise='" + phoneEnterprise + '\'' +
-                ", addressEnterprise='" + addressEnterprise + '\'' +
-                ", createdAtEnterprise=" + createdAtEnterprise +
-                ", updatedAtEnterprise=" + updatedAtEnterprise +
-                '}';
-    }
 }

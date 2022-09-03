@@ -1,16 +1,17 @@
 package thedevelopers.project.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Data
 @Table(name = "Employee")
-public class Employee {
+public class Employee implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +25,8 @@ public class Employee {
     private String emailEmployee;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "id_employee", referencedColumnName = "id")
+    @JoinColumn(name = "id_enterprise", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private Enterprise enterpriseEmployee;
 
     @Column(name = "role")
@@ -40,9 +42,7 @@ public class Employee {
     @Column(name = "updatedAt")
     private Date updatedAtEmployee;
 
-
-    public Employee(Long idEmployee,String nameEmployee ,String emailEmployee, Enterprise enterpriseEmployee, RoleName roleName, Date createdAtEmployee, Date updatedAtEmployee) {
-        this.idEmployee = idEmployee;
+    public Employee(String nameEmployee, String emailEmployee, Enterprise enterpriseEmployee, RoleName roleName, Date createdAtEmployee, Date updatedAtEmployee) {
         this.nameEmployee = nameEmployee;
         this.emailEmployee = emailEmployee;
         this.enterpriseEmployee = enterpriseEmployee;
@@ -51,16 +51,8 @@ public class Employee {
         this.updatedAtEmployee = updatedAtEmployee;
     }
 
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "idEmployee=" + idEmployee +
-                ", nameEmployee='" + nameEmployee + '\'' +
-                ", emailEmployee='" + emailEmployee + '\'' +
-                ", enterpriseEmployee=" + enterpriseEmployee +
-                ", roleName=" + roleName +
-                ", createdAtEmployee=" + createdAtEmployee +
-                ", updatedAtEmployee=" + updatedAtEmployee +
-                '}';
+    public Employee(){
+
+
     }
 }

@@ -35,7 +35,4 @@ public class Profile {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "updatedAt")
     private Date updatedAtProfile;
-
-
-
 }
