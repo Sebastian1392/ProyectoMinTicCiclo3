@@ -18,6 +18,9 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private EnterpriseService enterpriseService;
+
     @GetMapping("/users")
     public List<Employee> getEmployeeList(){
          return employeeService.getAll();
@@ -25,6 +28,7 @@ public class EmployeeController {
 
     @PostMapping("/users")
     public Employee createEmployee(@RequestBody Employee employee){
+        employee.setEnterpriseEmployee(enterpriseService.getElement(String.valueOf(employee.getEnterpriseEmployee().getIdEnterprise())));
         return employeeService.createElement(employee);
     }
 
@@ -35,7 +39,15 @@ public class EmployeeController {
 
     @PatchMapping("/user/{id}")
     public Employee updateEmployee(@RequestBody Employee employee,@PathVariable String id){
-        return employeeService.saveElement(employee);
+        Employee employeeFound = employeeService.getElement(id);
+        if(employeeFound != null){
+            Enterprise newEnterprise = employee.getEnterpriseEmployee();
+            if(newEnterprise != null && enterpriseService.getElement(String.valueOf(newEnterprise.getIdEnterprise())) != null){
+                employeeFound.setEnterpriseEmployee(enterpriseService.getElement(String.valueOf(newEnterprise.getIdEnterprise())));
+            }
+            return employeeService.updateElement(employeeFound,employee);
+        }
+        return null;
     }
 
     @DeleteMapping("/user/{id}")

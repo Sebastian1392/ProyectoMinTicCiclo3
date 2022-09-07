@@ -3,9 +3,13 @@ package thedevelopers.project.demo.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import thedevelopers.project.demo.domain.Employee;
+import thedevelopers.project.demo.domain.RoleName;
 import thedevelopers.project.demo.repositories.EmployeeRepository;
 import thedevelopers.project.demo.util.ServiceTemplate;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,6 +25,8 @@ public class EmployeeService implements ServiceTemplate<Employee> {
 
     @Override
     public Employee createElement(Employee element) {
+        element.setCreatedAtEmployee(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        element.setUpdatedAtEmployee(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         return employeeRepository.save(element);
     }
 
@@ -35,7 +41,18 @@ public class EmployeeService implements ServiceTemplate<Employee> {
     }
 
     @Override
-    public Employee saveElement(Employee element) {
+    public Employee updateElement(Employee element, Employee newElement) {
+        element.setNameEmployee((String) validateData(element.getNameEmployee(),newElement.getNameEmployee()));
+        element.setEmailEmployee((String) validateData(element.getEmailEmployee(),newElement.getEmailEmployee()));
+        element.setRoleName((RoleName) validateData(element.getRoleName(),newElement.getRoleName()));
+        element.setUpdatedAtEmployee(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         return employeeRepository.save(element);
+    }
+
+    private Object validateData(Object dataElement, Object dataNewElement){
+        if(dataNewElement != null){
+            return  dataNewElement;
+        }
+        return dataElement;
     }
 }

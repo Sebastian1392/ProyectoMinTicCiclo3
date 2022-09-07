@@ -11,4 +11,8 @@ public enum RoleName {
         this.textName = textName;
     }
 
+    public String getTextName(){
+        return textName;
+    }
+
 }

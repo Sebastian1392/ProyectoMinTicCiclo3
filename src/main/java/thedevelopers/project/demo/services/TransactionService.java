@@ -37,7 +37,10 @@ public class TransactionService implements ServiceTemplate<Transaction> {
     }
 
     @Override
-    public Transaction saveElement(Transaction element) {
+    public Transaction updateElement(Transaction element, Transaction newElement) {
+        return null;
+    }
+    public Transaction updateTransaction(Transaction element) {
         return transactionRepository.save(element);
     }
 
