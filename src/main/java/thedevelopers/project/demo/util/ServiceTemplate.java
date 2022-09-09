@@ -12,5 +12,5 @@ public interface ServiceTemplate<T> {
 
     public void deleteElement(T element);
 
-    public T saveElement(T element);
+    public T updateElement(T element, T newElement);
 }

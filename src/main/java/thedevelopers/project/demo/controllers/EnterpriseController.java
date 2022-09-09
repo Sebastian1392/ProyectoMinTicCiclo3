@@ -2,6 +2,7 @@ package thedevelopers.project.demo.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import thedevelopers.project.demo.domain.Enterprise;
 import thedevelopers.project.demo.domain.Transaction;
@@ -11,6 +12,7 @@ import thedevelopers.project.demo.services.TransactionService;
 import java.util.List;
 
 @Slf4j
+@Controller
 @RestController
 public class EnterpriseController {
 
@@ -36,9 +38,11 @@ public class EnterpriseController {
     }
 
     @PatchMapping("/enterprises/{id}")
-    public Enterprise updateEnterprise(@RequestBody Enterprise enterprise,@PathVariable(value = "id") String id){
-        if(enterpriseService.getElement(id) != null){
-            return enterpriseService.saveElement(enterprise);
+    public Enterprise updateEnterprise(@RequestBody Enterprise enterprise,@PathVariable String id){
+        Enterprise enterpriseFound = enterpriseService.getElement(id);
+        log.info(enterprise + "");
+        if(enterpriseFound != null){
+            return enterpriseService.updateElement(enterpriseFound, enterprise);
         }
         return null;
     }
@@ -63,15 +67,11 @@ public class EnterpriseController {
         return transactionService.createElement(transaction);
     }
 
-//    @GetMapping("/enterprises/{id}/movements")
-//    public Enterprise getEnterprise(@PathVariable String id){
-//        return enterpriseService.getElement(id);
-//    }
-
     @PatchMapping("/enterprises/{id}/movements")
     public Transaction updateEnterpriseMovement(@RequestBody Transaction transaction,@PathVariable(value = "id") String id){
-        if(enterpriseService.getElement(id) != null){
-            return transactionService.saveElement(transaction);
+        Enterprise enterpriseFound = enterpriseService.getElement(id);
+        if(enterpriseFound != null){
+            return transactionService.updateTransaction(transaction);
         }
         return null;
     }
@@ -86,4 +86,8 @@ public class EnterpriseController {
         return "No se pudo eliminar el elemento, no existe";
     }
 
+    @GetMapping("/prueba")
+    public String prueba(){
+        return "index";
+    }
 }
