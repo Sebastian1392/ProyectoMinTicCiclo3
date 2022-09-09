@@ -8,6 +8,9 @@ import thedevelopers.project.demo.repositories.EmployeeRepository;
 import thedevelopers.project.demo.repositories.TransactionRepository;
 import thedevelopers.project.demo.util.ServiceTemplate;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,6 +26,8 @@ public class TransactionService implements ServiceTemplate<Transaction> {
 
     @Override
     public Transaction createElement(Transaction element) {
+        element.setCreatedAtTransaction(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        element.setUpdatedAtTransaction(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         return transactionRepository.save(element);
     }
 
@@ -38,10 +43,16 @@ public class TransactionService implements ServiceTemplate<Transaction> {
 
     @Override
     public Transaction updateElement(Transaction element, Transaction newElement) {
-        return null;
-    }
-    public Transaction updateTransaction(Transaction element) {
+        element.setConceptTransaction((String)validateData(element.getConceptTransaction(),newElement.getConceptTransaction()));
+        element.setAmountTransaction((Float)validateData(element.getAmountTransaction(),newElement.getAmountTransaction()));
+        element.setUpdatedAtTransaction(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         return transactionRepository.save(element);
+    }
+    private Object validateData(Object dataElement, Object dataNewElement){
+        if(dataNewElement != null){
+            return  dataNewElement;
+        }
+        return dataElement;
     }
 
     public List<Transaction> getAllEnterpriseMovements(Long idEnterprise){

@@ -18,8 +18,11 @@ public class EnterpriseController {
 
     @Autowired
     private EnterpriseService enterpriseService;
-    @Autowired
-    private TransactionService transactionService;
+
+    @GetMapping("/")
+    public String home(){
+        return "index";
+    }
 
     @GetMapping("/enterprises")
     public List<Enterprise> getEnterpriseList(){
@@ -55,39 +58,5 @@ public class EnterpriseController {
             return "Empresa eliminada con exito";
         }
         return "No se pudo eliminar el elemento, no existe";
-    }
-
-    @GetMapping("/enterprises/{id}/movements")
-    public List<Transaction> getEnterpriseMovements(@PathVariable Long id){
-        return transactionService.getAllEnterpriseMovements(id);
-    }
-
-    @PostMapping("/enterprises/{id}/movements")
-    public Transaction createEnterpriseMovement(@RequestBody Transaction transaction){
-        return transactionService.createElement(transaction);
-    }
-
-    @PatchMapping("/enterprises/{id}/movements")
-    public Transaction updateEnterpriseMovement(@RequestBody Transaction transaction,@PathVariable(value = "id") String id){
-        Enterprise enterpriseFound = enterpriseService.getElement(id);
-        if(enterpriseFound != null){
-            return transactionService.updateTransaction(transaction);
-        }
-        return null;
-    }
-
-    @DeleteMapping("/enterprises/{id}/movements")
-    public String deleteEnterpriseMovement(@PathVariable String id){
-        Transaction transaction = transactionService.getElement(id);
-        if (transaction != null){
-            transactionService.deleteElement(transaction);
-            return "Transacción eliminada con exito";
-        }
-        return "No se pudo eliminar el elemento, no existe";
-    }
-
-    @GetMapping("/prueba")
-    public String prueba(){
-        return "index";
     }
 }
