@@ -38,7 +38,7 @@ public class TransactionController {
     @GetMapping("/enterprises/{id}/movements/{idTransaction}")
     public Transaction getEnterpriseSpecificMovement(@PathVariable(value = "id") Long idEnterprise, @PathVariable(value = "idTransaction") String idTransaction){
         Transaction transactionFound = transactionService.getElement(idTransaction);
-        if(transactionFound.getEnterpriseTransaction().getIdEnterprise() == idEnterprise){
+        if(transactionFound != null && transactionFound.getEnterpriseTransaction().getIdEnterprise() == idEnterprise){
             return transactionFound;
         }
         return null;
@@ -64,6 +64,8 @@ public class TransactionController {
     public String deleteEnterpriseMovement(@PathVariable(value = "id") Long idEnterprise, @PathVariable(value = "idTransaction") String idTransaction){
         Transaction transaction = transactionService.getElement(idTransaction);
         if (transaction != null && transaction.getEnterpriseTransaction().getIdEnterprise() == idEnterprise){
+            transaction.setEmployeeTransaction(null);
+            transaction.setEnterpriseTransaction(null);
             transactionService.deleteElement(transaction);
             return "Transacción eliminada con exito";
         }

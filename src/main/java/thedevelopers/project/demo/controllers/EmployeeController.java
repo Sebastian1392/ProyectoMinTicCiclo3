@@ -54,8 +54,9 @@ public class EmployeeController {
     public String deleteEmployee(@PathVariable String id){
         Employee employee = employeeService.getElement(id);
         if (employeeService.getElement(id) != null){
+            employee.setEnterpriseEmployee(null);
             employeeService.deleteElement(employee);
-            return "Empresa eliminada con exito";
+            return "Empleado eliminado con exito";
         }
         return "No se pudo eliminar el elemento, no existe";
     }
