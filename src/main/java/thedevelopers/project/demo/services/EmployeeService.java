@@ -55,4 +55,12 @@ public class EmployeeService implements ServiceTemplate<Employee> {
         }
         return dataElement;
     }
+
+    public boolean haveTransactions(String idEmployee){
+        return employeeRepository.findEmployeeTransactions(Long.parseLong(idEmployee)).size() > 0;
+    }
+
+    public boolean findEmail(String email){
+        return employeeRepository.findEmail(email) != null;
+    }
 }

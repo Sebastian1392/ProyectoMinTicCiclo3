@@ -3,6 +3,7 @@ package thedevelopers.project.demo.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import thedevelopers.project.demo.domain.Enterprise;
 import thedevelopers.project.demo.domain.Transaction;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RestController
+//@RestController
 public class TransactionController {
 
     @Autowired
@@ -26,8 +27,9 @@ public class TransactionController {
     private EmployeeService employeeService;
 
     @GetMapping("/movements")
-    public List<Transaction> getAllMovements(){
-        return transactionService.getAll();
+    public String getAllMovements(Model model){
+        model.addAttribute("movementList", transactionService.getAll());
+        return "income";
     }
 
     @GetMapping("/enterprises/{id}/movements")

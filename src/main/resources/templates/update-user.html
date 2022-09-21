@@ -29,37 +29,29 @@
                 </div>
                 <div class="overflow-auto h-100 w-100 border-bottom px-3 d-flex flex-column justify-content-center border">
                     <h4 class="text-center">Nuevo Usuario</h4>
-                    <form th:action="@{/users}" method="POST" th:object="${employee}" class="d-flex flex-column gap-2 h-100 px-5">
+                    <form th:action="@{/user/{id}(id=${employeeData.getIdEmployee()})}" th:method="patch" th:object="${employee}" class="d-flex flex-column gap-2 h-100 px-5">
                         <div class="form-group">
                             <label>Nombre</label>
-                            <input th:if="${employeeData == null}" type="text" class="form-control" name="nameEmployee" aria-describedby="emailHelp" placeholder="Ingresa tu nombre">
-                            <input th:if="${employeeData != null}" th:value="${employeeData.getNameEmployee()}" type="text" class="form-control" name="nameEmployee" aria-describedby="emailHelp" placeholder="Ingresa tu nombre">
+                            <input th:value="${employeeData.getNameEmployee()}" type="text" class="form-control" name="nameEmployee" aria-describedby="emailHelp" placeholder="Ingresa tu nombre">
                         </div>
                         <div class="form-group">
                             <label>Correo</label>
-                            <input th:if="${employeeData == null}" type="email" class="form-control" name="emailEmployee" aria-describedby="emailHelp" placeholder="Ingresa tu correo">
-                            <input th:if="${employeeData != null}" th:value="${employeeData.getEmailEmployee()}" type="email" class="form-control" name="emailEmployee" aria-describedby="emailHelp" placeholder="Ingresa tu correo">
+                            <input th:value="${employeeData.getEmailEmployee()}" type="email" class="form-control" name="emailEmployee" aria-describedby="emailHelp" placeholder="Ingresa tu correo">
                         </div>
                         <div class="form-group">
                             <label>Rol</label>
-                            <select th:if="${employeeData == null}" class="form-select" name="roleName" aria-label="Default select example">
-                                <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
-                            </select>
-                            <select th:if="${employeeData != null}" class="form-select" name="roleName" aria-label="Default select example">
+                            <select class="form-select" name="roleName" aria-label="Default select example">
                                 <option th:each="role : ${roles}" th:value="${role}" th:text="${role}" th:selected="(${employeeData.getRoleName()} == ${role})"></option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Empresa</label>
-                            <select th:if="${employeeData == null}" class="form-select" name="enterpriseEmployee" aria-label="Default select example">
-                                <option th:each="enterprise : ${enterpriseList}" th:value="${enterprise.getIdEnterprise()}" th:text="${enterprise.getIdEnterprise() + ' - ' + enterprise.getNameEnterprise()}"></option>
-                            </select>
-                            <select th:if="${employeeData != null}" class="form-select" name="enterpriseEmployee" aria-label="Default select example">
+                            <select class="form-select" name="enterpriseEmployee" aria-label="Default select example">
                                 <option th:each="enterprise : ${enterpriseList}" th:value="${enterprise.getIdEnterprise()}" th:text="${enterprise.getIdEnterprise() + ' - ' + enterprise.getNameEnterprise()}" th:selected="(${employeeData.getEnterpriseEmployee().getIdEnterprise()} == ${enterprise.getIdEnterprise()})"></option>
                             </select>
                         </div>
                         <div class="form-group text-center">
-                            <button class="btn btn-primary w-25" test-id="registry" type="submit">Ingresar</button>
+                            <button class="btn btn-primary w-25" test-id="registry" type="submit">Guardar</button>
                         </div>
                     </form>
                 </div>

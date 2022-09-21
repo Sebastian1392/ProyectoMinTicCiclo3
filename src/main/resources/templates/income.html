@@ -11,12 +11,7 @@
 <body>
     <main>
         <div class="row m-0" style="height: 100vh;">
-            <div class="col-4 bg-primary d-flex flex-column align-items-center gap-5 py-4">
-                <img class="mb-5 mt-5" src="../static/img/buildings.png" alt="Logo" style="width: 30%;">
-                <a type="button" class="btn btn-dark w-50" href="/income">Ingresos y egresos</a>
-                <a type="button" class="btn btn-dark w-50" href="/users">Usuarios</a>
-                <a type="button" class="btn btn-dark w-50" href="/enterprises">Empresas</a>
-            </div>
+            <div th:replace="index :: menu"></div>
             <div class="col-8 py-5 px-2 d-flex flex-column gap-3 align-items-center h-100 px-5">
                 <h1>Sistema de gestion de Ingresos y Gastos</h1>
                 <div class="d-flex justify-content-between gap-3 w-100 mt-2">
@@ -25,22 +20,26 @@
                 </div>
                 <div class="overflow-auto h-100 w-100 border-bottom">
                     <table class="table border w-100" style="width: 100vh;">
-                        <tr class="bg-secondary">
-                            <th class="col text-light">Id</th>
-                            <th class="col text-light">Concepto</th>
-                            <th class="col text-light">Monto</th>
-                            <th class="col text-light">Fecha</th>
-                            <th class="col text-light">Usuario</th>
-                            <th class="col text-light">Empresa</th>
-                        </tr>
-                        <tr>
-                            <td>Dato 1</td>
-                            <td>Dato 2</td>
-                            <td>Dato 3</td>
-                            <td>Dato 4</td>
-                            <td>Dato 5</td>
-                            <td>Dato 6</td>
-                        </tr>
+                        <thead class="thead-dark">
+                            <tr class="bg-secondary">
+                                <th class="col text-light">Id</th>
+                                <th class="col text-light">Concepto</th>
+                                <th class="col text-light">Monto</th>
+                                <th class="col text-light">Fecha</th>
+                                <th class="col text-light">Usuario</th>
+                                <th class="col text-light">Empresa</th>
+                            </tr>
+                        </thead>
+                        <tbody th:if="${movementList != null and !movementList.isEmpty()}">
+                            <tr th:each="movement :${movementList}">
+                                <td th:text="${movement.getIdTransaction()}"></td>
+                                <td th:text="${movement.getConceptTransaction()}"></td>
+                                <td th:text="${movement.getAmountTransaction()}"></td>
+                                <td th:text="${movement.getCreatedAtTransaction()}"></td>
+                                <td th:text="${movement.getEmployeeTransaction().getNameEmployee()}"></td>
+                                <td th:text="${movement.getEnterpriseTransaction().getNameEnterprise()}"></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div class="d-flex justify-content-end align-items-center gap-2 w-75">

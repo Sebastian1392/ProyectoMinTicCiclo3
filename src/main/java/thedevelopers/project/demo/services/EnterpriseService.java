@@ -55,4 +55,29 @@ public class EnterpriseService implements ServiceTemplate<Enterprise> {
         }
         return dataElement;
     }
+
+    public boolean haveAsociations(String idEnterprise){
+        Long id = Long.parseLong(idEnterprise);
+        return enterpriseRepository.findEnterpriseTransactions(id).size() > 0 || enterpriseRepository.findEnterpriseEmployees(id).size() > 0;
+    }
+
+    public String findDocumentAndName(String name, String document){
+        String message = "";
+        if(enterpriseRepository.findName(name) != null){
+            message = "nombre";
+        }else if (enterpriseRepository.findDocument(document) != null) {
+            message = "documento";
+        }
+        return message;
+    }
+
+    public String validateData(Enterprise element, Enterprise newElement){
+        String message = "";
+        if(!element.getNameEnterprise().equals(newElement.getNameEnterprise()) && element.getDocumentEnterprise().equals(newElement.getDocumentEnterprise())){
+            message = findDocumentAndName(newElement.getNameEnterprise(),"");
+        }else if(element.getNameEnterprise().equals(newElement.getNameEnterprise()) && !element.getDocumentEnterprise().equals(newElement.getDocumentEnterprise())){
+            message = findDocumentAndName("",newElement.getDocumentEnterprise());
+        }
+        return message;
+    }
 }

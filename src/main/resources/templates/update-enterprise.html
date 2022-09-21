@@ -30,29 +30,25 @@
                 </div>
                 <div class="overflow-auto h-100 w-100 border-bottom px-3 d-flex flex-column justify-content-center border">
                     <h4 class="text-center">Nueva Empresa</h4>
-                    <form th:action="@{/enterprises}" method="POST" th:object="${enterprise}" class="d-flex flex-column gap-2 h-100 px-5">
+                    <form th:action="@{/enterprises/{id}(id=${enterpriseData.getIdEnterprise()})}" th:method="patch" th:object="${enterprise}" class="d-flex flex-column gap-2 h-100 px-5">
                         <div class="form-group">
                             <label>Nombre</label>
-                            <input th:if="${enterpriseData == null}" type="text" class="form-control" name="nameEnterprise" placeholder="Ingresa el nombre">
-                            <input th:if="${enterpriseData != null}" th:value="${enterpriseData.getNameEnterprise()}" type="text" class="form-control" name="nameEnterprise" placeholder="Ingresa el nombre">
+                            <input th:value="${enterpriseData.getNameEnterprise()}" type="text" class="form-control" name="nameEnterprise" placeholder="Ingresa el nombre">
                         </div>
                         <div class="form-group">
                             <label>Documento</label>
-                            <input th:if="${enterpriseData == null}" type="number" class="form-control" name="documentEnterprise" placeholder="Ingresa el documento">
-                            <input th:if="${enterpriseData != null}" th:value="${enterpriseData.getDocumentEnterprise()}" type="number" class="form-control" name="documentEnterprise" placeholder="Ingresa el documento">
+                            <input th:value="${enterpriseData.getDocumentEnterprise()}" type="number" class="form-control" name="documentEnterprise" placeholder="Ingresa el documento">
                         </div>
                         <div class="form-group">
                             <label>Dirección</label>
-                            <input th:if="${enterpriseData == null}" type="text" class="form-control" name="addressEnterprise" placeholder="Ingresa la dirección">
-                            <input th:if="${enterpriseData != null}" th:value="${enterpriseData.getAddressEnterprise()}" type="text" class="form-control" name="addressEnterprise" placeholder="Ingresa la dirección">
+                            <input th:value="${enterpriseData.getAddressEnterprise()}" type="text" class="form-control" name="addressEnterprise" placeholder="Ingresa la dirección">
                         </div>
                         <div class="form-group">
                             <label>Número</label>
-                            <input th:if="${enterpriseData == null}" type="number" class="form-control" name="phoneEnterprise" placeholder="Ingresa el número">
-                            <input th:if="${enterpriseData != null}" th:value="${enterpriseData.getPhoneEnterprise()}" type="number" class="form-control" name="phoneEnterprise" placeholder="Ingresa el número">
+                            <input th:value="${enterpriseData.getPhoneEnterprise()}" type="number" class="form-control" name="phoneEnterprise" placeholder="Ingresa el número">
                         </div>
                         <div class="form-group text-center">
-                            <button class="btn btn-primary w-25" test-id="registry" type="submit">Ingresar</button>
+                            <button class="btn btn-primary w-25" test-id="registry" type="submit">Guardar</button>
                         </div>
                     </form>
                 </div>
