@@ -21,7 +21,7 @@ public class Employee implements Serializable{
     @Column(name = "name", nullable = false)
     private String nameEmployee;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "emailEmployee", unique = true)
     private String emailEmployee;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
@@ -51,8 +51,10 @@ public class Employee implements Serializable{
         this.updatedAtEmployee = updatedAtEmployee;
     }
 
-    public Employee(){
-
-
+    public Employee(String emailEmployee){
+        this.emailEmployee = emailEmployee;
     }
+
+    public Employee(){}
+
 }

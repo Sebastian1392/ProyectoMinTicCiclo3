@@ -1,10 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/2c36e9b7b1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>Login</title>
 </head>
-<body>
-
+<body class="p-5 bg-primary d-flex flex-column justify-content-center align-items-center w-100 h-100">
+    <main class="h-100 w-50 p-4 border bg-white rounded d-flex justify-content-center align-items-center">
+        <div class="d-flex flex-column align-items-center h-100 px-5">
+            <h1 class="text-center display-5 border-bottom pb-3 my-5">Sistema de Gestion de Ingresos y Gastos</h1>
+            <div class="my-5" sec:authorize="!isAuthenticated()">
+                <h3>Inicia sesión con Google</h3>
+                <a class="d-flex justify-content-center btn btn-primary" th:href="@{/oauth2/authorization/auth0}">Iniciar sesión</a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <div th:switch= "${employee.getNameEmployee()}">
+                    <div class="gap-2" th:case="null">
+                        <h4>Autenticación realizada con éxito!</h4>
+                        <h5 class="d-flex justify-content-center">Solo falta el último paso...</h5>
+                        <form th:action="@{/login}" method="POST" th:object="${employee}" class="gap-4">
+                            <div class="form-group">
+                                <label class="h5">Email</label>
+                                <input class="form-control" th:field="*{emailEmployee}" th:value="${employee.getEmailEmployee()}" type="email" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="h5">Nombre</label>
+                                <input th:field="*{nameEmployee}" type="text" class="form-control" placeholder="Ingresa tu nombre aquí">
+                            </div>
+                            <div class="form-group">
+                                <label class="h5">Rol</label>
+                                <select th:field="*{roleName}" class="form-control">
+                                    <option th:value="${rolAdmin}"
+                                            th:text="${rolAdmin}"></option>
+                                    <option th:value="${rolOper}"
+                                            th:text="${rolOper}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="h5">Empresas</label>
+                                <select th:field="*{enterpriseEmployee}" class="form-control">
+                                    <option th:each="enterprise : ${enterprises}"
+                                            th:value="${enterprise.getIdEnterprise}"
+                                            th:text="${enterprise.getNameEnterprise}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="mt-2 btn btn-primary w-100">Crear usuario</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 </body>
 </html>

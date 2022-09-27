@@ -2,6 +2,8 @@ package thedevelopers.project.demo.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +29,10 @@ public class TransactionController {
     private EmployeeService employeeService;
 
     @GetMapping("/movements")
-    public String getAllMovements(Model model){
+    public String getAllMovements(Model model, @AuthenticationPrincipal OidcUser principal){
         model.addAttribute("movementList", transactionService.getAll());
+        boolean isAdmin = employeeService.getEmployee(principal.getClaims()).getRoleName().getTextName().equalsIgnoreCase("ADMIN");
+        model.addAttribute("isAdmin", isAdmin);
         return "income";
     }
 

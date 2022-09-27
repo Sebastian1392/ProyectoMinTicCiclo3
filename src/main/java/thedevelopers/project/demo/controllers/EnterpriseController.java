@@ -2,6 +2,8 @@ package thedevelopers.project.demo.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import thedevelopers.project.demo.domain.Employee;
 import thedevelopers.project.demo.domain.Enterprise;
 import thedevelopers.project.demo.domain.Transaction;
+import thedevelopers.project.demo.services.EmployeeService;
 import thedevelopers.project.demo.services.EnterpriseService;
 import thedevelopers.project.demo.services.TransactionService;
 import javax.validation.Valid;
@@ -23,14 +26,19 @@ public class EnterpriseController {
     @Autowired
     private EnterpriseService enterpriseService;
 
-    @GetMapping("/")
-    public String home(){
+    @Autowired
+    private EmployeeService employeeService;
+
+    @GetMapping("/index")
+    public String getIndex(){
         return "index";
     }
 
     @GetMapping("/enterprises")
-    public String getEnterpriseList(Model model){
+    public String getEnterpriseList(Model model, @AuthenticationPrincipal OidcUser principal){
         model.addAttribute("enterpriseList", enterpriseService.getAll());
+        boolean isAdmin = employeeService.getEmployee(principal.getClaims()).getRoleName().getTextName().equalsIgnoreCase("ADMIN");
+        model.addAttribute("isAdmin", isAdmin);
         return "enterprises";
     }
 

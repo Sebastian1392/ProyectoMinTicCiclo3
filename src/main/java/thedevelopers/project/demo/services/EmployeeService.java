@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmployeeService implements ServiceTemplate<Employee> {
@@ -21,6 +22,16 @@ public class EmployeeService implements ServiceTemplate<Employee> {
     @Override
     public List<Employee> getAll() {
         return employeeRepository.findAll();
+    }
+
+    public Employee findEmployeeByEmail(String email){
+        Employee employee = this.employeeRepository.findEmployeeByEmailEmployee(email);
+        return employee;
+    }
+
+    public Employee getEmployee(Map<String, Object> userData){
+        String email = userData.get("email").toString();
+        return findEmployeeByEmail(email);
     }
 
     @Override

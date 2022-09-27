@@ -16,7 +16,7 @@
                 <h1>Sistema de gestion de Ingresos y Gastos</h1>
                 <div class="d-flex justify-content-between gap-3 w-100 mt-2">
                     <h4 class="border-bottom pb-2">Ingresos y egresos</h4>
-                    <a class="btn btn-primary" href="/new/income">Nuevo</a>
+                    <a th:if="${isAdmin}" class="btn btn-primary" href="/new/income">Nuevo</a>
                 </div>
                 <div class="overflow-auto h-100 w-100 border-bottom">
                     <table class="table border w-100" style="width: 100vh;">
