@@ -2,6 +2,8 @@ package thedevelopers.project.demo.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,8 @@ public class EnterpriseController {
     @Autowired
     private EnterpriseService enterpriseService;
 
-    @GetMapping("/")
-    public String home(){
+    @GetMapping("/index")
+    public String getIndex(){
         return "index";
     }
 

@@ -2,10 +2,13 @@ package thedevelopers.project.demo.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import thedevelopers.project.demo.domain.Employee;
 import thedevelopers.project.demo.domain.Enterprise;
 import thedevelopers.project.demo.domain.RoleName;
@@ -25,6 +28,24 @@ public class EmployeeController {
 
     @Autowired
     private EnterpriseService enterpriseService;
+
+    @GetMapping("/")
+    public String home(Model model, @AuthenticationPrincipal OidcUser principal) {
+        if (principal!=null){
+            Employee employee = employeeService.getEmployee(principal.getClaims());
+            List<Enterprise> enterprises =this.enterpriseService.getAll();
+            if (employee != null){
+                model.addAttribute("employee", employee);
+                return "index";
+            }else{
+                model.addAttribute("employee", new Employee(principal.getEmail().toString()));
+                model.addAttribute("enterprises", enterprises);
+                model.addAttribute("rolAdmin", RoleName.ADMIN);
+                model.addAttribute("rolOper", RoleName.OPERARIO);
+            }
+        }
+        return "login";
+    }
 
     @GetMapping("/users")
     public String getEmployeeList(Model model){
@@ -55,6 +76,15 @@ public class EmployeeController {
         }
         return "redirect:/users";
     }
+
+    @PostMapping("/login")
+    public RedirectView createNewUser(Employee employee, Model model){
+        model.addAttribute(employee);
+        employeeService.createElement(employee);
+        return new RedirectView("/index");
+    }
+
+
 
     @GetMapping("/user/{id}")
     public Employee getEmployee(@PathVariable String id){

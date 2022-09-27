@@ -1,10 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/2c36e9b7b1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>Login</title>
 </head>
 <body>
 
+    <main class="d-flex flex-column align-items-center h-100 px-5">
+        <h1>Sistema de Gestion de Ingresos y Gastos</h1>
+        <div sec:authorize="!isAuthenticated()">
+            <h2>Ingrese a su cuenta o cree una nueva</h2>
+            <a th:href="@{/oauth2/authorization/auth0}">Iniciar sesión</a>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <div th:switch= "${employee.getNameEmployee()}">
+                <div th:case="null">
+                    <h2>Gracias por registrarte, termina de ingresar unos datos más...</h2>
+                    <form th:action="@{/login}" method="POST" th:object="${employee}" class="gap-5">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input th:field="*{emailEmployee}" th:value="${employee.getEmailEmployee()}" type="email" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input th:field="*{nameEmployee}" type="text" class="form-control" placeholder="Ingresa tu nombre aquí">
+                        </div>
+                        <div class="form-group">
+                            <label>Rol</label>
+                            <select th:field="*{roleName}" class="form-control">
+                                <option th:value="${rolAdmin}"
+                                        th:text="${rolAdmin}"></option>
+                                <option th:value="${rolOper}"
+                                        th:text="${rolOper}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Empresas</label>
+                            <select th:field="*{enterpriseEmployee}" class="form-control">
+                                <option th:each="enterprise : ${enterprises}"
+                                        th:value="${enterprise.getIdEnterprise}"
+                                        th:text="${enterprise.getNameEnterprise}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn-primary">Crear usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+
+        </div>
+        <a></a>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 </body>
 </html>
