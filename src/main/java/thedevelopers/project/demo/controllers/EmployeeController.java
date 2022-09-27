@@ -48,8 +48,10 @@ public class EmployeeController {
     }
 
     @GetMapping("/users")
-    public String getEmployeeList(Model model){
+    public String getEmployeeList(Model model, @AuthenticationPrincipal OidcUser principal){
         model.addAttribute("userList", employeeService.getAll());
+        boolean isAdmin = employeeService.getEmployee(principal.getClaims()).getRoleName().getTextName().equalsIgnoreCase("ADMIN");
+        model.addAttribute("isAdmin", isAdmin);
         return "users";
     }
 
