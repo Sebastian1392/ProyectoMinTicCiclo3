@@ -58,4 +58,12 @@ public class TransactionService implements ServiceTemplate<Transaction> {
     public List<Transaction> getAllEnterpriseMovements(Long idEnterprise){
         return transactionRepository.findAllEnterpriseMovements(idEnterprise);
     }
+
+    public Float getTotalAmount(List<Transaction> enterpriseTransactions){
+        Float totalAmount = Float.valueOf(0);
+        for (Transaction transaction: enterpriseTransactions) {
+            totalAmount += transaction.getAmountTransaction();
+        }
+        return totalAmount;
+    }
 }

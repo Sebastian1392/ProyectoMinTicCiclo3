@@ -77,6 +77,8 @@ public class EnterpriseService implements ServiceTemplate<Enterprise> {
             message = findDocumentAndName(newElement.getNameEnterprise(),"");
         }else if(element.getNameEnterprise().equals(newElement.getNameEnterprise()) && !element.getDocumentEnterprise().equals(newElement.getDocumentEnterprise())){
             message = findDocumentAndName("",newElement.getDocumentEnterprise());
+        }else if(!element.getNameEnterprise().equals(newElement.getNameEnterprise()) && !element.getDocumentEnterprise().equals(newElement.getDocumentEnterprise())){
+            message = findDocumentAndName(newElement.getNameEnterprise(),newElement.getDocumentEnterprise());
         }
         return message;
     }

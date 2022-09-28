@@ -69,13 +69,13 @@ public class EnterpriseController {
         return enterpriseService.getElement(id);
     }
 
-    @GetMapping("/update_enterprise/{id}")
-    public String updateEnterprise(@PathVariable String id, Model model, Enterprise newEnterprise, String message){
-        Enterprise enterprise = enterpriseService.getElement(id);
+    @GetMapping("/update_enterprise")
+    public String updateEnterprise(Enterprise enterprise, Model model, Enterprise newEnterprise, String message){
+        Enterprise enterpriseFound = enterpriseService.getElement(String.valueOf(enterprise.getIdEnterprise()));
         if(newEnterprise.getNameEnterprise() != null){
             model.addAttribute("mensaje", "El " + message + " que intenta registrar ya existe");
         }
-        model.addAttribute("enterpriseData", enterprise);
+        model.addAttribute("enterpriseData", enterpriseFound);
         return "update-enterprise";
     }
 
@@ -90,7 +90,7 @@ public class EnterpriseController {
                 redirectAttrs.addFlashAttribute("clase", "success");
             }
         }else{
-            return this.updateEnterprise(id, model, enterprise, messageData);
+            return this.updateEnterprise(enterpriseFound, model, enterprise, messageData);
         }
         return "redirect:/enterprises";
     }

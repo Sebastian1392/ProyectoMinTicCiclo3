@@ -9,6 +9,7 @@
     <script src="https://kit.fontawesome.com/2c36e9b7b1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <title>Usuarios</title>
+    <link th:replace="index :: icon">
 </head>
 <body>
     <main>
@@ -49,10 +50,18 @@
                                         <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                                     </form>
                                 </td>
-                                <td th:if="${isAdmin}"><a th:href="@{/update_user/{id}(id=${user.getIdEmployee()})}" class="btn btn-warning"><i class="fas fa-edit"></i></a></td>
+                                <td th:if="${isAdmin}">
+                                    <form th:action="@{/update_user}" th:method="get" th:object="${employee}">
+                                        <input style="display: none;" th:value="${user.getIdEmployee()}" type="text" class="form-control" name="idEmployee" aria-describedby="emailHelp" readonly>
+                                        <button type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                                    </form>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
+                    <div class="text-center p-2" th:if="${userList == null or userList.isEmpty()}">
+                        <h5>No hay usuarios registrados en el sistema</h5>
+                    </div>
                 </div>
             </div>
         </div>

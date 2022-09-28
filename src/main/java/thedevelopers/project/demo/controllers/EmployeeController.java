@@ -19,7 +19,6 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-//@RestController
 @Controller
 public class EmployeeController {
 
@@ -30,14 +29,15 @@ public class EmployeeController {
     private EnterpriseService enterpriseService;
 
     @GetMapping("/")
-    public String home(Model model, @AuthenticationPrincipal OidcUser principal) {
+    public String login(Model model, @AuthenticationPrincipal OidcUser principal) {
         if (principal!=null){
             Employee employee = employeeService.getEmployee(principal.getClaims());
             List<Enterprise> enterprises =this.enterpriseService.getAll();
             if (employee != null){
                 model.addAttribute("employee", employee);
-                return "index";
+                return "redirect:/home";
             }else{
+                log.info(principal.getFullName());
                 model.addAttribute("employee", new Employee(principal.getEmail().toString()));
                 model.addAttribute("enterprises", enterprises);
                 model.addAttribute("rolAdmin", RoleName.ADMIN);
@@ -45,6 +45,11 @@ public class EmployeeController {
             }
         }
         return "login";
+    }
+
+    @GetMapping("/home")
+    public String home(){
+        return "index";
     }
 
     @GetMapping("/users")
@@ -80,12 +85,11 @@ public class EmployeeController {
     }
 
     @PostMapping("/login")
-    public RedirectView createNewUser(Employee employee, Model model){
+    public String createNewUser(Employee employee, Model model){
         model.addAttribute(employee);
         employeeService.createElement(employee);
-        return new RedirectView("/index");
+        return "redirect:/home";
     }
-
 
 
     @GetMapping("/user/{id}")
@@ -93,13 +97,14 @@ public class EmployeeController {
         return employeeService.getElement(id);
     }
 
-    @GetMapping("/update_user/{id}")
-    public String updateEmployee(@PathVariable String id, Model model, Employee newEmployee){
-        Employee employee = employeeService.getElement(id);
+    @GetMapping("/update_user")
+    public String updateEmployee(Employee employee, Model model, Employee newEmployee){
+        Employee employeeFound = employeeService.getElement(String.valueOf(employee.getIdEmployee()));
+        log.info(employee + "");
         if(newEmployee.getNameEmployee() != null){
             model.addAttribute("mensaje", "El correo que intenta registrar ya existe");
         }
-        model.addAttribute("employeeData", employee);
+        model.addAttribute("employeeData", employeeFound);
         model.addAttribute("roles", RoleName.values());
         model.addAttribute("enterpriseList",enterpriseService.getAll());
         return "update-user";
@@ -109,7 +114,7 @@ public class EmployeeController {
     public String saveChangesEmployee(@Valid Employee employee,@PathVariable String id, Model model, RedirectAttributes redirectAttrs){
         Employee employeeFound = employeeService.getElement(id);
         if(employeeService.findEmail(employee.getEmailEmployee()) && !employee.getEmailEmployee().equals(employeeFound.getEmailEmployee())){
-            return this.updateEmployee(id, model, employee);
+            return this.updateEmployee(employeeFound, model, employee);
         }else{
             if(employeeFound != null){
                 Enterprise newEnterprise = employee.getEnterpriseEmployee();
@@ -125,11 +130,13 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/user/{id}")
-    public String deleteEmployee(@PathVariable String id, RedirectAttributes redirectAttrs){
-        if(employeeService.haveTransactions(id)){
+    public String deleteEmployee(@PathVariable String id, RedirectAttributes redirectAttrs,@AuthenticationPrincipal OidcUser principal){
+        Employee employee = employeeService.getElement(id);
+        if(employeeService.haveTransactions(id)) {
             redirectAttrs.addFlashAttribute("mensaje", "El usuario no se puede eliminar \n porque tiene transacciones asociadas");
+        }else if(employeeService.getEmployee(principal.getClaims()).getEmailEmployee().equals(employee.getEmailEmployee())){
+            redirectAttrs.addFlashAttribute("mensaje", "El usuario no se puede eliminar \n porque tiene sesión iniciada");
         }else{
-            Employee employee = employeeService.getElement(id);
             if (employeeService.getElement(id) != null){
                 employee.setEnterpriseEmployee(null);
                 employeeService.deleteElement(employee);

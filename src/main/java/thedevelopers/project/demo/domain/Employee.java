@@ -21,7 +21,7 @@ public class Employee implements Serializable{
     @Column(name = "name", nullable = false)
     private String nameEmployee;
 
-    @Column(name = "emailEmployee", unique = true)
+    @Column(name = "email_employee", unique = true)
     private String emailEmployee;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)

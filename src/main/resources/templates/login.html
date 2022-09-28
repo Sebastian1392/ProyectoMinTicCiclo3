@@ -9,6 +9,7 @@
     <script src="https://kit.fontawesome.com/2c36e9b7b1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <title>Login</title>
+    <link th:replace="index :: icon">
 </head>
 <body class="p-5 bg-primary d-flex flex-column justify-content-center align-items-center w-100 h-100">
     <main class="h-100 w-50 p-4 border bg-white rounded d-flex justify-content-center align-items-center">
@@ -30,7 +31,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="h5">Nombre</label>
-                                <input th:field="*{nameEmployee}" type="text" class="form-control" placeholder="Ingresa tu nombre aquí">
+                                <input th:field="*{nameEmployee}" th:value="${employee.getNameEmployee()}" type="text" class="form-control" placeholder="Ingresa tu nombre aquí">
                             </div>
                             <div class="form-group">
                                 <label class="h5">Rol</label>

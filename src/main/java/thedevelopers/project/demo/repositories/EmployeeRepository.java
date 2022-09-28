@@ -15,6 +15,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query(nativeQuery = true,value = "SELECT * FROM transaction WHERE id_employee = ?1")
     List<String> findEmployeeTransactions(Long idEmployee);
 
-    @Query(nativeQuery = true,value = "SELECT email FROM employee WHERE email LIKE ?1")
+    @Query(nativeQuery = true,value = "SELECT email_employee FROM employee WHERE email_employee LIKE ?1")
     String findEmail(String email);
 }

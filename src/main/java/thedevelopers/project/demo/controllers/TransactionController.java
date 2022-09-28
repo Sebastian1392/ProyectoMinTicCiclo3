@@ -7,21 +7,21 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import thedevelopers.project.demo.domain.Employee;
 import thedevelopers.project.demo.domain.Enterprise;
 import thedevelopers.project.demo.domain.Transaction;
 import thedevelopers.project.demo.services.EmployeeService;
 import thedevelopers.project.demo.services.EnterpriseService;
 import thedevelopers.project.demo.services.TransactionService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
 @Controller
-//@RestController
 public class TransactionController {
 
-    @Autowired
-    private EnterpriseService enterpriseService;
     @Autowired
     private TransactionService transactionService;
 
@@ -30,51 +30,64 @@ public class TransactionController {
 
     @GetMapping("/movements")
     public String getAllMovements(Model model, @AuthenticationPrincipal OidcUser principal){
-        model.addAttribute("movementList", transactionService.getAll());
-        boolean isAdmin = employeeService.getEmployee(principal.getClaims()).getRoleName().getTextName().equalsIgnoreCase("ADMIN");
+        Employee userLogin = employeeService.getEmployee(principal.getClaims());
+        List<Transaction> enterpriseTransactions = transactionService.getAllEnterpriseMovements(userLogin.getEnterpriseEmployee().getIdEnterprise());
+        boolean isAdmin = userLogin.getRoleName().getTextName().equalsIgnoreCase("ADMIN");
+        model.addAttribute("movementList", enterpriseTransactions);
         model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("totalAmount", transactionService.getTotalAmount(enterpriseTransactions));
         return "income";
     }
 
-    @GetMapping("/enterprises/{id}/movements")
-    public List<Transaction> getEnterpriseMovements(@PathVariable Long id){
-        return transactionService.getAllEnterpriseMovements(id);
+    @GetMapping("/new_movement")
+    public String createEnterpriseMovement(Model model, @AuthenticationPrincipal OidcUser principal){
+        Employee loginUser = employeeService.getEmployee(principal.getClaims());
+        model.addAttribute("userTransaction", loginUser);
+        model.addAttribute("enterpriseTransaction", loginUser.getEnterpriseEmployee());
+        return "new-income";
     }
 
-    @GetMapping("/enterprises/{id}/movements/{idTransaction}")
-    public Transaction getEnterpriseSpecificMovement(@PathVariable(value = "id") Long idEnterprise, @PathVariable(value = "idTransaction") String idTransaction){
+    @PostMapping("/movements")
+    public String saveNewEnterpriseMovement(@Valid Transaction transaction, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttrs){
+        Employee loginUser = employeeService.getEmployee(principal.getClaims());
+        transaction.setEnterpriseTransaction(loginUser.getEnterpriseEmployee());
+        transaction.setEmployeeTransaction(loginUser);
+        transactionService.createElement(transaction);
+        redirectAttrs.addFlashAttribute("mensaje", "Transacción creada con éxito");
+        redirectAttrs.addFlashAttribute("clase", "success");
+        return "redirect:/movements";
+    }
+
+    @GetMapping("/update_movement")
+    public String updateEnterpriseMovement(Transaction transaction, Model model){
+        Transaction transactionFound = transactionService.getElement(String.valueOf(transaction.getIdTransaction()));
+        model.addAttribute("transactionData", transactionFound);
+        return "update-income";
+    }
+
+    @PatchMapping("/movements/{id}")
+    public String saveChangesEnterpriseMovement(@Valid Transaction transaction, @PathVariable(value = "id") String idTransaction, RedirectAttributes redirectAttrs){
         Transaction transactionFound = transactionService.getElement(idTransaction);
-        if(transactionFound != null && transactionFound.getEnterpriseTransaction().getIdEnterprise() == idEnterprise){
-            return transactionFound;
+        if(transactionFound != null){
+            transactionService.updateElement(transactionFound, transaction);
+            redirectAttrs.addFlashAttribute("mensaje", "Transacción actualizada con éxito");
+            redirectAttrs.addFlashAttribute("clase", "success");
+            return "redirect:/movements";
         }
-        return null;
+        return "redirect:/movements";
     }
 
-    @PostMapping("/enterprises/{id}/movements")
-    public Transaction createEnterpriseMovement(@RequestBody Transaction transaction){
-        transaction.setEnterpriseTransaction(enterpriseService.getElement(String.valueOf(transaction.getEnterpriseTransaction().getIdEnterprise())));
-        transaction.setEmployeeTransaction(employeeService.getElement(String.valueOf(transaction.getEmployeeTransaction().getIdEmployee())));
-        return transactionService.createElement(transaction);
-    }
-
-    @PatchMapping("/enterprises/{id}/movements/{idTransaction}")
-    public Transaction updateEnterpriseMovement(@RequestBody Transaction transaction,@PathVariable(value = "id") Long idEnterprise, @PathVariable(value = "idTransaction") String idTransaction){
-        Transaction transactionFound = transactionService.getElement(idTransaction);
-        if(transactionFound != null && transactionFound.getEnterpriseTransaction().getIdEnterprise() == idEnterprise){
-            return transactionService.updateElement(transactionFound, transaction);
-        }
-        return null;
-    }
-
-    @DeleteMapping("/enterprises/{id}/movements/{idTransaction}")
-    public String deleteEnterpriseMovement(@PathVariable(value = "id") Long idEnterprise, @PathVariable(value = "idTransaction") String idTransaction){
+    @DeleteMapping("/movements/{idTransaction}")
+    public String deleteEnterpriseMovement(@PathVariable(value = "idTransaction") String idTransaction, RedirectAttributes redirectAttrs){
         Transaction transaction = transactionService.getElement(idTransaction);
-        if (transaction != null && transaction.getEnterpriseTransaction().getIdEnterprise() == idEnterprise){
+        if (transaction != null){
             transaction.setEmployeeTransaction(null);
             transaction.setEnterpriseTransaction(null);
             transactionService.deleteElement(transaction);
-            return "Transacción eliminada con exito";
+            redirectAttrs.addFlashAttribute("mensaje", "Transacción eliminada con éxito");
+            redirectAttrs.addFlashAttribute("clase", "success");
+            return "redirect:/movements";
         }
-        return "No se pudo eliminar el elemento, no existe";
+        return "redirect:/movements";
     }
 }
