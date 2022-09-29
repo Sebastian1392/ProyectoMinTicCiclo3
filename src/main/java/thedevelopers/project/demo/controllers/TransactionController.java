@@ -27,13 +27,15 @@ public class TransactionController {
 
     @Autowired
     private EmployeeService employeeService;
+    private Employee employee;
 
     @GetMapping("/movements")
     public String getAllMovements(Model model, @AuthenticationPrincipal OidcUser principal){
-        Employee userLogin = employeeService.getEmployee(principal.getClaims());
-        List<Transaction> enterpriseTransactions = transactionService.getAllEnterpriseMovements(userLogin.getEnterpriseEmployee().getIdEnterprise());
-        boolean isAdmin = userLogin.getRoleName().getTextName().equalsIgnoreCase("ADMIN");
+        employee = employeeService.getEmployee(principal.getClaims());
+        List<Transaction> enterpriseTransactions = transactionService.getAllEnterpriseMovements(employee.getEnterpriseEmployee().getIdEnterprise());
+        boolean isAdmin = employee.getRoleName().getTextName().equalsIgnoreCase("ADMIN");
         model.addAttribute("movementList", enterpriseTransactions);
+        model.addAttribute("employee", this.employee);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("totalAmount", transactionService.getTotalAmount(enterpriseTransactions));
         return "income";
@@ -42,6 +44,7 @@ public class TransactionController {
     @GetMapping("/new_movement")
     public String createEnterpriseMovement(Model model, @AuthenticationPrincipal OidcUser principal){
         Employee loginUser = employeeService.getEmployee(principal.getClaims());
+        model.addAttribute("employee", this.employee);
         model.addAttribute("userTransaction", loginUser);
         model.addAttribute("enterpriseTransaction", loginUser.getEnterpriseEmployee());
         return "new-income";
@@ -60,6 +63,7 @@ public class TransactionController {
 
     @GetMapping("/update_movement")
     public String updateEnterpriseMovement(Transaction transaction, Model model){
+        model.addAttribute("employee", this.employee);
         Transaction transactionFound = transactionService.getElement(String.valueOf(transaction.getIdTransaction()));
         model.addAttribute("transactionData", transactionFound);
         return "update-income";
