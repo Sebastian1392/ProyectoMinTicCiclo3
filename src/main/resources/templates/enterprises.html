@@ -51,7 +51,7 @@
                                     </form>
                                 </td>
                                 <td th:if="${isAdmin}">
-                                    <form th:action="@{/update_enterprise}" th:method="get" th:object="${enterprise}">
+                                    <form th:action="@{/update_enterprise/{id}(id=${enterprise.getIdEnterprise()})}" th:method="get" th:object="${enterprise}">
                                         <input style="display: none;" th:value="${enterprise.getIdEnterprise()}" type="text" class="form-control" name="idEnterprise" readonly>
                                         <button type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
                                     </form>

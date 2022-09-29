@@ -52,7 +52,7 @@
                                     </form>
                                 </td>
                                 <td th:if="${isAdmin}">
-                                    <form th:action="@{/update_user}" th:method="get" th:object="${employee}">
+                                    <form th:action="@{/update_user/{id}(id=${user.getIdEmployee()})}" th:method="get" th:object="${employee}">
                                         <input style="display: none;" th:value="${user.getIdEmployee()}" type="text" class="form-control" name="idEmployee" aria-describedby="emailHelp" readonly>
                                         <button type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
                                     </form>

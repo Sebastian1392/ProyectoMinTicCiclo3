@@ -69,10 +69,10 @@ public class TransactionController {
         return "redirect:/movements";
     }
 
-    @GetMapping("/update_movement")
-    public String updateEnterpriseMovement(Transaction transaction, Model model){
+    @GetMapping("/update_movement/{id}")
+    public String updateEnterpriseMovement(@PathVariable(value = "id") String idTransaction, Model model){
         model.addAttribute("employee", this.employee);
-        Transaction transactionFound = transactionService.getElement(String.valueOf(transaction.getIdTransaction()));
+        Transaction transactionFound = transactionService.getElement(idTransaction);
         model.addAttribute("transactionData", transactionFound);
         return "update-income";
     }

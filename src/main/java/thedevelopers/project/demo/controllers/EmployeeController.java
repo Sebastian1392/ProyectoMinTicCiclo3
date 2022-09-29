@@ -100,10 +100,9 @@ public class EmployeeController {
         return employeeService.getElement(id);
     }
 
-    @GetMapping("/update_user")
-    public String updateEmployee(Employee employee, Model model, Employee newEmployee){
-        Employee employeeFound = employeeService.getElement(String.valueOf(employee.getIdEmployee()));
-        log.info(employee + "");
+    @GetMapping("/update_user/{id}")
+    public String updateEmployee(@PathVariable String id, Model model, Employee newEmployee){
+        Employee employeeFound = employeeService.getElement(id);
         if(newEmployee.getNameEmployee() != null){
             model.addAttribute("mensaje", "El correo que intenta registrar ya existe");
         }
@@ -118,7 +117,7 @@ public class EmployeeController {
     public String saveChangesEmployee(@Valid Employee employee,@PathVariable String id, Model model, RedirectAttributes redirectAttrs){
         Employee employeeFound = employeeService.getElement(id);
         if(employeeService.findEmail(employee.getEmailEmployee()) && !employee.getEmailEmployee().equals(employeeFound.getEmailEmployee())){
-            return this.updateEmployee(employeeFound, model, employee);
+            return this.updateEmployee(id, model, employee);
         }else{
             if(employeeFound != null){
                 Enterprise newEnterprise = employee.getEnterpriseEmployee();

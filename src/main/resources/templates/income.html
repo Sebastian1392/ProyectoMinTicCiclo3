@@ -35,15 +35,15 @@
                                 <th class="col text-light">Fecha</th>
                                 <th class="col text-light">Usuario</th>
                                 <th class="col text-light">Empresa</th>
-                                <th class="col text-light">Eliminar</th>
-                                <th class="col text-light">Editar</th>
+                                <th th:if="${isAdmin}" class="col text-light">Eliminar</th>
+                                <th th:if="${isAdmin}" class="col text-light">Editar</th>
                             </tr>
                         </thead>
                         <tbody th:if="${movementList != null and !movementList.isEmpty()}">
                             <tr th:each="movement :${movementList}">
                                 <td th:text="${movement.getIdTransaction()}"></td>
                                 <td th:text="${movement.getConceptTransaction()}"></td>
-                                <td th:text="${movement.getAmountTransaction()}"></td>
+                                <td th:text="'$'+ ${#numbers.formatDecimal(movement.getAmountTransaction(), 0, 'COMMA', 2, 'POINT')}"></td>
                                 <td th:text="${movement.getCreatedAtTransaction()}"></td>
                                 <td th:text="${movement.getEmployeeTransaction().getNameEmployee()}"></td>
                                 <td th:text="${movement.getEnterpriseTransaction().getNameEnterprise()}"></td>
@@ -53,7 +53,7 @@
                                     </form>
                                 </td>
                                 <td th:if="${isAdmin}">
-                                    <form th:action="@{/update_movement}" th:method="get" th:object="${transaction}">
+                                    <form th:action="@{/update_movement/{id}(id=${movement.getIdTransaction()})}" th:method="get" th:object="${transaction}">
                                         <input style="display: none;" th:value="${movement.getIdTransaction()}" type="text" class="form-control" name="idTransaction" aria-describedby="emailHelp" readonly>
                                         <button type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
                                     </form>

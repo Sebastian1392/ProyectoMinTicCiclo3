@@ -6,8 +6,10 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/2c36e9b7b1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <title>Beast Sport Shop</title>
-    <link th:fragment="icon" rel="icon" href="img/logo.png">
+    <link th:fragment="icon" rel="icon" href="https://firebasestorage.googleapis.com/v0/b/proyectominticciclo3.appspot.com/o/logo.png?alt=media&token=87c5300f-0f41-43f4-91f4-9e9a1e5b492f">
 </head>
 <body>
     <main>
@@ -16,8 +18,13 @@
                 <div class="d-flex justify-content-left align-items-end w-100 gap-2 border-bottom">
                     <h2 class="fs-5 text-white text-start">Usuario</h2>
                     <h3 class="fs-4 font-weight-light text-white" th:text="${employee.getNameEmployee()}"></h3>
+                    <form method="post" th:action="@{/logout}">
+                        <a title="Salir" style="text-decoration: none;" type="submit" onclick="this.parentNode.submit();">
+                            <h2 class="fs-4 font-weight-light text-white"><i class="fas fa-sign-out-alt "></i></h2>
+                        </a>
+                    </form>
                 </div>
-                <a th:href="@{/home}" class="text-center"><img src="img/logo.png" class="mb-4 mt-4" alt="Logo" style="width: 50%;"></a>
+                <a title="Home" th:href="@{/home}" class="text-center"><img src="https://firebasestorage.googleapis.com/v0/b/proyectominticciclo3.appspot.com/o/logo.png?alt=media&token=87c5300f-0f41-43f4-91f4-9e9a1e5b492f" class="mb-4 mt-4" alt="Logo" style="width: 50%;"></a>
                 <a type="button" th:href="@{/movements}" test-id="movements" class="btn btn-dark w-50">Ingresos y Egresos</a>
                 <a type="button" th:href="@{/users}" test-id="users" class="btn btn-dark w-50">Usuarios</a>
                 <a type="button" th:href="@{/enterprises}" test-id="enterprises" class="btn btn-dark w-50">Empresas</a>

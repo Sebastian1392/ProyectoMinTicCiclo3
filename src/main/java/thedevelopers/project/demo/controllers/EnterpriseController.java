@@ -30,12 +30,6 @@ public class EnterpriseController {
     private EmployeeService employeeService;
     private Employee employee;
 
-
-    @GetMapping("/index")
-    public String getIndex(){
-        return "index";
-    }
-
     @GetMapping("/enterprises")
     public String getEnterpriseList(Model model, @AuthenticationPrincipal OidcUser principal){
         employee = employeeService.getEmployee(principal.getClaims());
@@ -74,10 +68,10 @@ public class EnterpriseController {
         return enterpriseService.getElement(id);
     }
 
-    @GetMapping("/update_enterprise")
-    public String updateEnterprise(Enterprise enterprise, Model model, Enterprise newEnterprise, String message){
+    @GetMapping("/update_enterprise/{id}")
+    public String updateEnterprise(@PathVariable String id, Model model, Enterprise newEnterprise, String message){
         model.addAttribute("employee", this.employee);
-        Enterprise enterpriseFound = enterpriseService.getElement(String.valueOf(enterprise.getIdEnterprise()));
+        Enterprise enterpriseFound = enterpriseService.getElement(id);
         if(newEnterprise.getNameEnterprise() != null){
             model.addAttribute("mensaje", "El " + message + " que intenta registrar ya existe");
         }
@@ -96,7 +90,7 @@ public class EnterpriseController {
                 redirectAttrs.addFlashAttribute("clase", "success");
             }
         }else{
-            return this.updateEnterprise(enterpriseFound, model, enterprise, messageData);
+            return this.updateEnterprise(id, model, enterprise, messageData);
         }
         return "redirect:/enterprises";
     }
