@@ -16,6 +16,7 @@ import thedevelopers.project.demo.services.EnterpriseService;
 import thedevelopers.project.demo.services.TransactionService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -31,7 +32,10 @@ public class TransactionController {
     @GetMapping("/movements")
     public String getAllMovements(Model model, @AuthenticationPrincipal OidcUser principal){
         Employee userLogin = employeeService.getEmployee(principal.getClaims());
-        List<Transaction> enterpriseTransactions = transactionService.getAllEnterpriseMovements(userLogin.getEnterpriseEmployee().getIdEnterprise());
+        List<Transaction> enterpriseTransactions = new ArrayList<>();
+        if(userLogin.getEnterpriseEmployee() != null){
+            enterpriseTransactions = transactionService.getAllEnterpriseMovements(userLogin.getEnterpriseEmployee().getIdEnterprise());
+        }
         boolean isAdmin = userLogin.getRoleName().getTextName().equalsIgnoreCase("ADMIN");
         model.addAttribute("movementList", enterpriseTransactions);
         model.addAttribute("isAdmin", isAdmin);
@@ -40,11 +44,17 @@ public class TransactionController {
     }
 
     @GetMapping("/new_movement")
-    public String createEnterpriseMovement(Model model, @AuthenticationPrincipal OidcUser principal){
+    public String createEnterpriseMovement(Model model, @AuthenticationPrincipal OidcUser principal,RedirectAttributes redirectAttrs){
         Employee loginUser = employeeService.getEmployee(principal.getClaims());
-        model.addAttribute("userTransaction", loginUser);
-        model.addAttribute("enterpriseTransaction", loginUser.getEnterpriseEmployee());
-        return "new-income";
+        if(loginUser.getEnterpriseEmployee() != null){
+            model.addAttribute("userTransaction", loginUser);
+            model.addAttribute("enterpriseTransaction", loginUser.getEnterpriseEmployee());
+            return "new-income";
+        }else{
+            redirectAttrs.addFlashAttribute("mensaje", "No se puede crear transacción porque el usuario no tiene una empresa asociada");
+            return "redirect:/movements";
+        }
+
     }
 
     @PostMapping("/movements")

@@ -42,8 +42,11 @@
                         </div>
                         <div class="form-group">
                             <label>Empresa</label>
-                            <select class="form-select" name="enterpriseEmployee" aria-label="Default select example">
+                            <select th:if="${employeeData.getEnterpriseEmployee() != null}" class="form-select" name="enterpriseEmployee" aria-label="Default select example">
                                 <option th:each="enterprise : ${enterpriseList}" th:value="${enterprise.getIdEnterprise()}" th:text="${enterprise.getIdEnterprise() + ' - ' + enterprise.getNameEnterprise()}" th:selected="(${employeeData.getEnterpriseEmployee().getIdEnterprise()} == ${enterprise.getIdEnterprise()})"></option>
+                            </select>
+                            <select th:if="${employeeData.getEnterpriseEmployee() == null}" class="form-select" name="enterpriseEmployee" aria-label="Default select example">
+                                <option th:each="enterprise : ${enterpriseList}" th:value="${enterprise.getIdEnterprise()}" th:text="${enterprise.getIdEnterprise() + ' - ' + enterprise.getNameEnterprise()}"></option>
                             </select>
                         </div>
                         <div class="form-group text-center">

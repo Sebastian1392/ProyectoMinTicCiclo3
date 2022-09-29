@@ -44,7 +44,8 @@
                                 <td th:text="${user.getNameEmployee()}"></td>
                                 <td th:text="${user.getEmailEmployee()}"></td>
                                 <td th:text="${user.getRoleName()}"></td>
-                                <td th:text="${user.getEnterpriseEmployee().getNameEnterprise()}"></td>
+                                <td th:if="${user.getEnterpriseEmployee() != null}" th:text="${user.getEnterpriseEmployee().getNameEnterprise()}"></td>
+                                <td th:if="${user.getEnterpriseEmployee() == null}">Sin Empresa</td>
                                 <td th:if="${isAdmin}">
                                     <form th:action="@{/user/{id}(id=${user.getIdEmployee()})}" th:method="delete">
                                         <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>

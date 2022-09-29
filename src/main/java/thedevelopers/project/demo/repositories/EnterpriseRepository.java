@@ -14,7 +14,7 @@ public interface EnterpriseRepository extends JpaRepository<Enterprise, Long> {
     @Query(nativeQuery = true,value = "SELECT * FROM transaction WHERE id_enterprise = ?1")
     List<String> findEnterpriseTransactions(Long idEnterprise);
 
-    @Query(nativeQuery = true,value = "SELECT * FROM Demployee WHERE id_enterprise = ?1")
+    @Query(nativeQuery = true,value = "SELECT * FROM employee WHERE id_enterprise = ?1")
     List<String> findEnterpriseEmployees(Long idEnterprise);
 
     @Query(nativeQuery = true,value = "SELECT name FROM enterprise WHERE name LIKE ?1")
