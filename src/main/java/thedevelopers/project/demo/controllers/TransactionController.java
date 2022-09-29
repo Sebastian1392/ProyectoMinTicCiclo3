@@ -16,6 +16,7 @@ import thedevelopers.project.demo.services.EnterpriseService;
 import thedevelopers.project.demo.services.TransactionService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -32,7 +33,10 @@ public class TransactionController {
     @GetMapping("/movements")
     public String getAllMovements(Model model, @AuthenticationPrincipal OidcUser principal){
         employee = employeeService.getEmployee(principal.getClaims());
-        List<Transaction> enterpriseTransactions = transactionService.getAllEnterpriseMovements(employee.getEnterpriseEmployee().getIdEnterprise());
+        List<Transaction> enterpriseTransactions = new ArrayList<>();
+        if(employee.getEnterpriseEmployee() != null){
+            enterpriseTransactions = transactionService.getAllEnterpriseMovements(employee.getEnterpriseEmployee().getIdEnterprise());
+        }
         boolean isAdmin = employee.getRoleName().getTextName().equalsIgnoreCase("ADMIN");
         model.addAttribute("movementList", enterpriseTransactions);
         model.addAttribute("employee", this.employee);
@@ -42,11 +46,14 @@ public class TransactionController {
     }
 
     @GetMapping("/new_movement")
-    public String createEnterpriseMovement(Model model, @AuthenticationPrincipal OidcUser principal){
-        Employee loginUser = employeeService.getEmployee(principal.getClaims());
-        model.addAttribute("employee", this.employee);
-        model.addAttribute("userTransaction", loginUser);
-        model.addAttribute("enterpriseTransaction", loginUser.getEnterpriseEmployee());
+    public String createEnterpriseMovement(Model model, RedirectAttributes redirectAttrs){
+        if(this.employee.getEnterpriseEmployee() == null){
+            redirectAttrs.addFlashAttribute("mensaje", "No se puede crear una transacción porque el usuario no tiene una empresa asociada");
+            return "redirect:/movements";
+        }
+        log.info(this.employee + "");
+        model.addAttribute("userTransaction", this.employee);
+        model.addAttribute("enterpriseTransaction", this.employee.getEnterpriseEmployee());
         return "new-income";
     }
 

@@ -16,7 +16,7 @@
         <div class="row m-0" style="height: 100vh;">
             <div th:replace="index :: menu"></div>
             <div class="col-8 py-5 px-2 d-flex flex-column gap-3 align-items-center h-100 px-5">
-                <h1>Sistema de gestion de Ingresos y Gastos</h1>
+                <h1>Sistema de gestión de Ingresos y Gastos</h1>
                 <div class="d-flex justify-content-between gap-3 w-100 mt-2">
                     <h4 class="border-bottom pb-2">Usuarios</h4>
                     <a th:if="${isAdmin}" class="btn btn-primary" th:href="@{/new_user}">Nuevo</a>
@@ -44,7 +44,8 @@
                                 <td th:text="${user.getNameEmployee()}"></td>
                                 <td th:text="${user.getEmailEmployee()}"></td>
                                 <td th:text="${user.getRoleName()}"></td>
-                                <td th:text="${user.getEnterpriseEmployee().getNameEnterprise()}"></td>
+                                <td th:if="${user.getEnterpriseEmployee() != null}" th:text="${user.getEnterpriseEmployee().getNameEnterprise()}"></td>
+                                <td th:if="${user.getEnterpriseEmployee() == null}">Sin Empresa</td>
                                 <td th:if="${isAdmin}">
                                     <form th:action="@{/user/{id}(id=${user.getIdEmployee()})}" th:method="delete">
                                         <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
