@@ -27,18 +27,17 @@ public class EmployeeController {
 
     @Autowired
     private EnterpriseService enterpriseService;
-    private Employee employee;
+    private Employee employeeLogin;
 
     @GetMapping("/")
     public String login(Model model, @AuthenticationPrincipal OidcUser principal) {
         if (principal!=null){
-            employee = employeeService.getEmployee(principal.getClaims());
+            this.employeeLogin = employeeService.getEmployee(principal.getClaims());
             List<Enterprise> enterprises =this.enterpriseService.getAll();
-            if (employee != null){
-                model.addAttribute("employee", employee);
+            if (employeeLogin != null){
+                model.addAttribute("employee", employeeLogin);
                 return "redirect:/home";
             }else{
-                log.info(principal.getFullName());
                 model.addAttribute("employee", new Employee(principal.getEmail().toString()));
                 model.addAttribute("enterprises", enterprises);
                 model.addAttribute("rolAdmin", RoleName.ADMIN);
@@ -50,15 +49,15 @@ public class EmployeeController {
 
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal OidcUser principal){
-        model.addAttribute("employee", employee);
+        model.addAttribute("employee", employeeLogin);
         return "index";
     }
 
     @GetMapping("/users")
     public String getEmployeeList(Model model, @AuthenticationPrincipal OidcUser principal){
         model.addAttribute("userList", employeeService.getAll());
-        employee = employeeService.getEmployee(principal.getClaims());
-        model.addAttribute("employee", this.employee);
+        employeeLogin = employeeService.getEmployee(principal.getClaims());
+        model.addAttribute("employee", this.employeeLogin);
         boolean isAdmin = employeeService.getEmployee(principal.getClaims()).getRoleName().getTextName().equalsIgnoreCase("ADMIN");
         model.addAttribute("isAdmin", isAdmin);
         return "users";
@@ -66,7 +65,7 @@ public class EmployeeController {
 
     @GetMapping("/new_user")
     public String createEmployee(Model model, Employee employee){
-        model.addAttribute("employee", this.employee);
+        model.addAttribute("employee", this.employeeLogin);
         log.info(employee + "");
         if(employee.getNameEmployee() != null){
             model.addAttribute("mensaje", "El correo que intenta registrar ya existe");
@@ -91,8 +90,8 @@ public class EmployeeController {
 
     @PostMapping("/login")
     public String createNewUser(Employee employee, Model model){
-        model.addAttribute(employee);
         employeeService.createElement(employee);
+        this.employeeLogin = employee;
         return "redirect:/home";
     }
 
@@ -112,7 +111,7 @@ public class EmployeeController {
         model.addAttribute("employeeData", employeeFound);
         model.addAttribute("roles", RoleName.values());
         model.addAttribute("enterpriseList",enterpriseService.getAll());
-        model.addAttribute("employee", this.employee);
+        model.addAttribute("employee", this.employeeLogin);
         return "update-user";
     }
 

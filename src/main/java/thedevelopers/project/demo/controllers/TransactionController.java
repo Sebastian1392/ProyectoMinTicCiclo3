@@ -28,34 +28,33 @@ public class TransactionController {
 
     @Autowired
     private EmployeeService employeeService;
+    private Employee employee;
 
     @GetMapping("/movements")
     public String getAllMovements(Model model, @AuthenticationPrincipal OidcUser principal){
-        Employee userLogin = employeeService.getEmployee(principal.getClaims());
+        employee = employeeService.getEmployee(principal.getClaims());
         List<Transaction> enterpriseTransactions = new ArrayList<>();
-        if(userLogin.getEnterpriseEmployee() != null){
-            enterpriseTransactions = transactionService.getAllEnterpriseMovements(userLogin.getEnterpriseEmployee().getIdEnterprise());
+        if(employee.getEnterpriseEmployee() != null){
+            enterpriseTransactions = transactionService.getAllEnterpriseMovements(employee.getEnterpriseEmployee().getIdEnterprise());
         }
-        boolean isAdmin = userLogin.getRoleName().getTextName().equalsIgnoreCase("ADMIN");
+        boolean isAdmin = employee.getRoleName().getTextName().equalsIgnoreCase("ADMIN");
         model.addAttribute("movementList", enterpriseTransactions);
-        model.addAttribute("employee", userLogin);
+        model.addAttribute("employee", this.employee);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("totalAmount", transactionService.getTotalAmount(enterpriseTransactions));
         return "income";
     }
 
     @GetMapping("/new_movement")
-    public String createEnterpriseMovement(Model model, @AuthenticationPrincipal OidcUser principal,RedirectAttributes redirectAttrs){
-        Employee loginUser = employeeService.getEmployee(principal.getClaims());
-        if(loginUser.getEnterpriseEmployee() != null){
-            log.info(loginUser+"");
-            model.addAttribute("userTransaction", loginUser);
-            model.addAttribute("enterpriseTransaction", loginUser.getEnterpriseEmployee());
-            return "new-income";
-        }else{
-            redirectAttrs.addFlashAttribute("mensaje", "No se puede crear transacción porque el usuario no tiene una empresa asociada");
+    public String createEnterpriseMovement(Model model, RedirectAttributes redirectAttrs){
+        if(this.employee.getEnterpriseEmployee() == null){
+            redirectAttrs.addFlashAttribute("mensaje", "No se puede crear una transacción porque el usuario no tiene una empresa asociada");
             return "redirect:/movements";
         }
+        log.info(this.employee + "");
+        model.addAttribute("userTransaction", this.employee);
+        model.addAttribute("enterpriseTransaction", this.employee.getEnterpriseEmployee());
+        return "new-income";
     }
 
     @PostMapping("/movements")
@@ -71,6 +70,7 @@ public class TransactionController {
 
     @GetMapping("/update_movement")
     public String updateEnterpriseMovement(Transaction transaction, Model model){
+        model.addAttribute("employee", this.employee);
         Transaction transactionFound = transactionService.getElement(String.valueOf(transaction.getIdTransaction()));
         model.addAttribute("transactionData", transactionFound);
         return "update-income";
