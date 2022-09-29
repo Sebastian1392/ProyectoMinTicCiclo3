@@ -46,12 +46,13 @@ public class TransactionController {
     }
 
     @GetMapping("/new_movement")
-    public String createEnterpriseMovement(Model model, RedirectAttributes redirectAttrs){
+    public String createEnterpriseMovement(Model model, @AuthenticationPrincipal OidcUser principal, RedirectAttributes redirectAttrs){
+        this.employee = employeeService.getEmployee(principal.getClaims());
         if(this.employee.getEnterpriseEmployee() == null){
             redirectAttrs.addFlashAttribute("mensaje", "No se puede crear una transacción porque el usuario no tiene una empresa asociada");
             return "redirect:/movements";
         }
-        log.info(this.employee + "");
+        model.addAttribute("employee", this.employee);
         model.addAttribute("userTransaction", this.employee);
         model.addAttribute("enterpriseTransaction", this.employee.getEnterpriseEmployee());
         return "new-income";

@@ -43,7 +43,7 @@
                             <tr th:each="movement :${movementList}">
                                 <td th:text="${movement.getIdTransaction()}"></td>
                                 <td th:text="${movement.getConceptTransaction()}"></td>
-                                <td id="amount" th:text="${movement.getAmountTransaction()}"></td>
+                                <td th:text="${movement.getAmountTransaction()}"></td>
                                 <td th:text="${movement.getCreatedAtTransaction()}"></td>
                                 <td th:text="${movement.getEmployeeTransaction().getNameEmployee()}"></td>
                                 <td th:text="${movement.getEnterpriseTransaction().getNameEnterprise()}"></td>
@@ -81,9 +81,7 @@
             currency: 'COP',
             minimumFractionDigits: 0
         })
-        var tableElements = document.getElementById('amount');
         var totalElement = document.getElementById('totalAmount');
-        tableElements.textContent = formatterPesoCol.format(tableElements.textContent);
         totalElement.textContent = formatterPesoCol.format(totalElement.textContent);
     </script>
 </body>

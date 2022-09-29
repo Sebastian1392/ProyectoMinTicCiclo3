@@ -35,7 +35,6 @@ public class EmployeeController {
             this.employeeLogin = employeeService.getEmployee(principal.getClaims());
             List<Enterprise> enterprises =this.enterpriseService.getAll();
             if (employeeLogin != null){
-                model.addAttribute("employee", employeeLogin);
                 return "redirect:/home";
             }else{
                 model.addAttribute("employee", new Employee(principal.getEmail().toString()));
