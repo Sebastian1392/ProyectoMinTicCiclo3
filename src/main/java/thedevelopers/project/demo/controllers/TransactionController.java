@@ -38,6 +38,7 @@ public class TransactionController {
         }
         boolean isAdmin = userLogin.getRoleName().getTextName().equalsIgnoreCase("ADMIN");
         model.addAttribute("movementList", enterpriseTransactions);
+        model.addAttribute("employee", userLogin);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("totalAmount", transactionService.getTotalAmount(enterpriseTransactions));
         return "income";
@@ -47,6 +48,7 @@ public class TransactionController {
     public String createEnterpriseMovement(Model model, @AuthenticationPrincipal OidcUser principal,RedirectAttributes redirectAttrs){
         Employee loginUser = employeeService.getEmployee(principal.getClaims());
         if(loginUser.getEnterpriseEmployee() != null){
+            log.info(loginUser+"");
             model.addAttribute("userTransaction", loginUser);
             model.addAttribute("enterpriseTransaction", loginUser.getEnterpriseEmployee());
             return "new-income";
@@ -54,7 +56,6 @@ public class TransactionController {
             redirectAttrs.addFlashAttribute("mensaje", "No se puede crear transacción porque el usuario no tiene una empresa asociada");
             return "redirect:/movements";
         }
-
     }
 
     @PostMapping("/movements")

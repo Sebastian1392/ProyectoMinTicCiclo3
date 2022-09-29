@@ -28,6 +28,8 @@ public class EnterpriseController {
 
     @Autowired
     private EmployeeService employeeService;
+    private Employee employee;
+
 
     @GetMapping("/index")
     public String getIndex(){
@@ -36,6 +38,8 @@ public class EnterpriseController {
 
     @GetMapping("/enterprises")
     public String getEnterpriseList(Model model, @AuthenticationPrincipal OidcUser principal){
+        employee = employeeService.getEmployee(principal.getClaims());
+        model.addAttribute("employee", this.employee);
         model.addAttribute("enterpriseList", enterpriseService.getAll());
         boolean isAdmin = employeeService.getEmployee(principal.getClaims()).getRoleName().getTextName().equalsIgnoreCase("ADMIN");
         model.addAttribute("isAdmin", isAdmin);
@@ -44,6 +48,7 @@ public class EnterpriseController {
 
     @GetMapping("/new_enterprise")
     public String createEnterprise(Enterprise enterprise, Model model, String message){
+        model.addAttribute("employee", this.employee);
         if(enterprise.getNameEnterprise() != null){
             model.addAttribute("mensaje", "El " + message + " que intenta registrar ya existe");
         }
@@ -71,6 +76,7 @@ public class EnterpriseController {
 
     @GetMapping("/update_enterprise")
     public String updateEnterprise(Enterprise enterprise, Model model, Enterprise newEnterprise, String message){
+        model.addAttribute("employee", this.employee);
         Enterprise enterpriseFound = enterpriseService.getElement(String.valueOf(enterprise.getIdEnterprise()));
         if(newEnterprise.getNameEnterprise() != null){
             model.addAttribute("mensaje", "El " + message + " que intenta registrar ya existe");

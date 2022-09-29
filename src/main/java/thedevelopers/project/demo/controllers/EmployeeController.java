@@ -27,11 +27,12 @@ public class EmployeeController {
 
     @Autowired
     private EnterpriseService enterpriseService;
+    private Employee employee;
 
     @GetMapping("/")
     public String login(Model model, @AuthenticationPrincipal OidcUser principal) {
         if (principal!=null){
-            Employee employee = employeeService.getEmployee(principal.getClaims());
+            employee = employeeService.getEmployee(principal.getClaims());
             List<Enterprise> enterprises =this.enterpriseService.getAll();
             if (employee != null){
                 model.addAttribute("employee", employee);
@@ -48,13 +49,16 @@ public class EmployeeController {
     }
 
     @GetMapping("/home")
-    public String home(){
+    public String home(Model model, @AuthenticationPrincipal OidcUser principal){
+        model.addAttribute("employee", employee);
         return "index";
     }
 
     @GetMapping("/users")
     public String getEmployeeList(Model model, @AuthenticationPrincipal OidcUser principal){
         model.addAttribute("userList", employeeService.getAll());
+        employee = employeeService.getEmployee(principal.getClaims());
+        model.addAttribute("employee", this.employee);
         boolean isAdmin = employeeService.getEmployee(principal.getClaims()).getRoleName().getTextName().equalsIgnoreCase("ADMIN");
         model.addAttribute("isAdmin", isAdmin);
         return "users";
@@ -62,6 +66,7 @@ public class EmployeeController {
 
     @GetMapping("/new_user")
     public String createEmployee(Model model, Employee employee){
+        model.addAttribute("employee", this.employee);
         log.info(employee + "");
         if(employee.getNameEmployee() != null){
             model.addAttribute("mensaje", "El correo que intenta registrar ya existe");
@@ -107,6 +112,7 @@ public class EmployeeController {
         model.addAttribute("employeeData", employeeFound);
         model.addAttribute("roles", RoleName.values());
         model.addAttribute("enterpriseList",enterpriseService.getAll());
+        model.addAttribute("employee", this.employee);
         return "update-user";
     }
 
